@@ -1,8 +1,9 @@
+import type { JSX } from "react";
 import type { Offer } from "@/interfaces/offer";
 import { StatusMessage } from "@/components/molecules/StatusMessage";
-import { OfferCard } from "@/features/offers/components/OfferCard";
+import { OfferCard } from "@/components/atoms/OfferCard";
 
-interface OfferListProps {
+type OfferListProps = {
   offers: Offer[] | undefined;
   selectedOfferId: string | null;
   isLoading: boolean;
@@ -10,7 +11,7 @@ interface OfferListProps {
   onSelect: (offerId: string) => void;
   onContinue: (offerId: string) => void;
   onRetry: () => void;
-}
+};
 
 export function OfferList({
   offers,
@@ -20,20 +21,28 @@ export function OfferList({
   onSelect,
   onContinue,
   onRetry,
-}: OfferListProps) {
+}: Readonly<OfferListProps>): JSX.Element {
   if (isLoading) {
     return <StatusMessage variant="loading">Buscando ofertas…</StatusMessage>;
   }
+
   if (isError) {
     return (
       <StatusMessage variant="error">
         <p>Não foi possível carregar as ofertas agora.</p>
-        <button className="text-button" type="button" onClick={onRetry}>Carregar novamente</button>
+        <button className="text-button" type="button" onClick={onRetry}>
+          Carregar novamente
+        </button>
       </StatusMessage>
     );
   }
+
   if (!offers?.length) {
-    return <StatusMessage variant="info">No momento, não há ofertas disponíveis.</StatusMessage>;
+    return (
+      <StatusMessage variant="info">
+        No momento, não há ofertas disponíveis.
+      </StatusMessage>
+    );
   }
 
   return (

@@ -1,17 +1,23 @@
-import type { ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 
-interface StatusMessageProps {
+type StatusMessageProps = {
   variant: "loading" | "error" | "info";
   children: ReactNode;
   className?: string;
-}
+};
 
-export function StatusMessage({ variant, children, className }: StatusMessageProps) {
+export function StatusMessage({
+  variant,
+  children,
+  className,
+}: Readonly<StatusMessageProps>): JSX.Element {
   const messageClass = [
     "state-message",
     variant === "error" ? "state-message--error" : "",
     className ?? "",
-  ].filter(Boolean).join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div

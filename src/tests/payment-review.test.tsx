@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { CheckoutFlow } from "@/features/checkout/components/CheckoutFlow";
+import { CheckoutFlow } from "@/components/templates/CheckoutFlow";
 import { renderWithProviders } from "@/tests/test-utils";
 
 async function selectOfferAndContinue(user: ReturnType<typeof userEvent.setup>) {

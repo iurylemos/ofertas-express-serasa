@@ -1,10 +1,16 @@
-interface CheckoutButtonProps {
+import type { JSX } from "react";
+
+type CheckoutButtonProps = {
   disabled: boolean;
   pending: boolean;
   onConfirm: () => void;
-}
+};
 
-export function CheckoutButton({ disabled, pending, onConfirm }: CheckoutButtonProps) {
+export function CheckoutButton({
+  disabled,
+  pending,
+  onConfirm,
+}: Readonly<CheckoutButtonProps>): JSX.Element {
   return (
     <>
       <button

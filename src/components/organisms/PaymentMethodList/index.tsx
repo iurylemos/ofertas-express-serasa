@@ -1,15 +1,16 @@
+import type { JSX } from "react";
 import type { PaymentMethod } from "@/interfaces/payment-method";
 import { StatusMessage } from "@/components/molecules/StatusMessage";
-import { PaymentMethodCard } from "@/features/payment/components/PaymentMethodCard";
+import { PaymentMethodCard } from "@/components/atoms/PaymentMethodCard";
 
-interface PaymentMethodListProps {
+type PaymentMethodListProps = {
   methods: PaymentMethod[] | undefined;
   selectedMethodId: string | null;
   isLoading: boolean;
   isError: boolean;
   onSelect: (methodId: string) => void;
   onRetry: () => void;
-}
+};
 
 export function PaymentMethodList({
   methods,
@@ -18,20 +19,32 @@ export function PaymentMethodList({
   isError,
   onSelect,
   onRetry,
-}: PaymentMethodListProps) {
+}: Readonly<PaymentMethodListProps>): JSX.Element {
   if (isLoading) {
-    return <StatusMessage variant="loading">Buscando formas de pagamento…</StatusMessage>;
+    return (
+      <StatusMessage variant="loading">
+        Buscando formas de pagamento…
+      </StatusMessage>
+    );
   }
+
   if (isError) {
     return (
       <StatusMessage variant="error">
         <p>Não foi possível carregar as formas de pagamento.</p>
-        <button className="text-button" type="button" onClick={onRetry}>Tentar novamente</button>
+        <button className="text-button" type="button" onClick={onRetry}>
+          Tentar novamente
+        </button>
       </StatusMessage>
     );
   }
+
   if (!methods?.length) {
-    return <StatusMessage variant="info">Não há formas de pagamento para esta oferta.</StatusMessage>;
+    return (
+      <StatusMessage variant="info">
+        Não há formas de pagamento para esta oferta.
+      </StatusMessage>
+    );
   }
 
   return (
