@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import type { Offer } from "@/interfaces/offer";
 import { StatusMessage } from "@/components/molecules/StatusMessage";
-import { OfferCard } from "@/features/offers/components/OfferCard";
+import { OfferCard } from "@/components/atoms/OfferCard";
 
 type OfferListProps = {
   offers: Offer[] | undefined;

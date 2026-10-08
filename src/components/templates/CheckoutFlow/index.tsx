@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState, type JSX } from "react";
-import { CheckoutButton } from "@/features/checkout/components/CheckoutButton";
-import { CheckoutFeedback } from "@/features/checkout/components/CheckoutFeedback";
-import { CheckoutSuccess } from "@/features/checkout/components/CheckoutSuccess";
-import { ReviewSummary } from "@/features/checkout/components/ReviewSummary";
-import { useCheckoutFlow } from "@/features/checkout/hooks/use-checkout-flow";
-import { useSubmitCheckout } from "@/features/checkout/hooks/use-submit-checkout";
-import { OfferList } from "@/features/offers/components/OfferList";
-import { PaymentMethodList } from "@/features/payment/components/PaymentMethodList";
+import { CheckoutButton } from "@/components/atoms/CheckoutButton";
+import { CheckoutFeedback } from "@/components/molecules/CheckoutFeedback";
+import { CheckoutSuccess } from "@/components/organisms/CheckoutSuccess";
+import { ReviewSummary } from "@/components/organisms/ReviewSummary";
+import { useCheckoutFlow } from "@/hooks/use-checkout-flow";
+import { useSubmitCheckout } from "@/hooks/use-submit-checkout";
+import { OfferList } from "@/components/organisms/OfferList";
+import { PaymentMethodList } from "@/components/organisms/PaymentMethodList";
 import { NumberUtil } from "@/utils/number.util";
 
 const steps = [

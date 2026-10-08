@@ -9,7 +9,7 @@ type SubmitCheckoutMutationResult = UseMutationResult<
   unknown
 >;
 
-export function useSubmitCheckout(): SubmitCheckoutMutationResult {
+export function useSubmitCheckout(): Readonly<SubmitCheckoutMutationResult> {
   return useMutation({
     mutationFn: submitCheckout,
   });

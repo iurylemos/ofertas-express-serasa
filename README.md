@@ -34,6 +34,9 @@ Os testes usam Vitest, Testing Library e MSW sem chamadas a serviços externos.
 - **TanStack React Query** mantém ofertas e métodos como estado de servidor; as escolhas e a
   etapa atual ficam em estado React transitório.
 - **Serviços e interfaces tipadas** isolam requisições, validação de respostas e erros seguros.
+- **Componentes e hooks compartilhados** ficam em `src/components/`: componentes são
+  organizados por papel (`atoms`, `molecules`, `organisms` ou `templates`) em
+  `<NomeDoComponente>/index.tsx`, e hooks em `src/components/hooks/`.
 - **MSW** reutiliza handlers e fixtures no navegador e nos testes, cobrindo sucesso, vazio e
   falha HTTP.
 - **Vitest, jsdom e Testing Library** exercitam os fluxos visíveis de seleção, revisão,

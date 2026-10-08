@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { CheckoutFlow } from "@/features/checkout/components/CheckoutFlow";
+import { CheckoutFlow } from "@/components/templates/CheckoutFlow";
 
 export default function HomePage(): JSX.Element {
   return <CheckoutFlow />;

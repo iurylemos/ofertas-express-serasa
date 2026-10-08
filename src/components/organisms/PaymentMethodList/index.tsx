@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import type { PaymentMethod } from "@/interfaces/payment-method";
 import { StatusMessage } from "@/components/molecules/StatusMessage";
-import { PaymentMethodCard } from "@/features/payment/components/PaymentMethodCard";
+import { PaymentMethodCard } from "@/components/atoms/PaymentMethodCard";
 
 type PaymentMethodListProps = {
   methods: PaymentMethod[] | undefined;

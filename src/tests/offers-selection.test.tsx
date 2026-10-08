@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { emptyOffersHandler } from "@/mocks/handlers";
 import { server } from "@/mocks/server";
-import { CheckoutFlow } from "@/features/checkout/components/CheckoutFlow";
+import { CheckoutFlow } from "@/components/templates/CheckoutFlow";
 import { renderWithProviders } from "@/tests/test-utils";
 
 describe("offer selection", () => {

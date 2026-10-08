@@ -1,8 +1,8 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useOffers } from "@/features/offers/hooks/use-offers";
-import { usePaymentMethods } from "@/features/payment/hooks/use-payment-methods";
+import { useOffers } from "@/hooks/use-offers";
+import { usePaymentMethods } from "@/hooks/use-payment-methods";
 import { Offer } from "@/interfaces/offer";
 import { UseQueryResult } from "@tanstack/react-query";
 import { PaymentMethod } from "@/interfaces/payment-method";
@@ -24,7 +24,7 @@ type CheckoutFlowData = {
   continueToReview: () => void;
 };
 
-export function useCheckoutFlow(): CheckoutFlowData {
+export function useCheckoutFlow(): Readonly<CheckoutFlowData> {
   const [activeStep, setActiveStep] = useState<CheckoutStep>("offers");
   const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
   const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
