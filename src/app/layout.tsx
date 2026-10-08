@@ -5,9 +5,9 @@ import { MockWorkerProvider } from "@/providers/mock-worker-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import "./globals.css";
 
-type RootLayoutProps = Readonly<{
+type RootLayoutProps = {
   children: ReactNode;
-}>;
+};
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -16,7 +16,9 @@ export const metadata: Metadata = {
   description: "Escolha uma oferta e conclua seu acordo com segurança.",
 };
 
-export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
+export default function RootLayout({
+  children,
+}: Readonly<RootLayoutProps>): JSX.Element {
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
