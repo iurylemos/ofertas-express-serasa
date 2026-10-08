@@ -1,9 +1,7 @@
 # Quickstart: Offers Checkout Flow
 
-This guide defines how to validate the feature after the application bootstrap and
-implementation are complete. The current repository is a starter manifest with no app
-dependencies or working development/test scripts yet; the commands below become runnable as
-the implementation configures them.
+This guide validates the implemented offers and checkout flow. Development and tests use the
+same MSW-backed API contracts; no live backend or payment provider is required.
 
 ## Prerequisites
 
