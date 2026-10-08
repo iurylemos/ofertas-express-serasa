@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CheckoutButton } from "@/features/checkout/components/CheckoutButton";
 import { CheckoutFeedback } from "@/features/checkout/components/CheckoutFeedback";
 import { CheckoutSuccess } from "@/features/checkout/components/CheckoutSuccess";
@@ -15,16 +16,30 @@ const steps = [
   { id: "review", label: "Revisão" },
 ] as const;
 
+function formatMoney(amountMinor: number, currency: string): string {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency }).format(amountMinor / 100);
+}
+
 export function CheckoutFlow() {
   const flow = useCheckoutFlow();
   const checkout = useSubmitCheckout();
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const success = checkout.data;
+
+  useEffect(() => {
+    setAcceptedTerms(false);
+  }, [flow.selectedOfferId, flow.selectedMethodId]);
 
   if (success) return <CheckoutSuccess result={success} />;
 
   const stepIndex = steps.findIndex((step) => step.id === flow.activeStep);
   const submitSelectedCheckout = () => {
-    if (checkout.isPending || !flow.selectedOfferId || !flow.selectedMethodId) return;
+    if (
+      checkout.isPending ||
+      !acceptedTerms ||
+      !flow.selectedOfferId ||
+      !flow.selectedMethodId
+    ) return;
     checkout.mutate({
       offerId: flow.selectedOfferId,
       paymentMethodId: flow.selectedMethodId,
@@ -34,19 +49,27 @@ export function CheckoutFlow() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <a className="brand" href="/" aria-label="Minhas dívidas, início">Minhas dívidas</a>
-        <span className="brand-mark" aria-hidden="true">OE</span>
+        <div className="topbar__inner">
+          <a className="brand" href="/" aria-label="Minhas dívidas, início">Minhas dívidas</a>
+          <div className="topbar__user">
+            <span>Olá, Maria</span>
+            <span className="brand-mark" aria-label="Maria Silva">MS</span>
+          </div>
+        </div>
       </header>
       <main className="checkout-main">
         <nav className="step-progress" aria-label="Etapas do acordo">
           {steps.map((step, index) => (
             <div
-              className={`step-progress__step${index <= stepIndex ? " step-progress__step--active" : ""}`}
+              className={`step-progress__step${index < stepIndex ? " step-progress__step--complete" : ""}${index === stepIndex ? " step-progress__step--active" : ""}`}
               key={step.id}
               aria-current={index === stepIndex ? "step" : undefined}
             >
               <span className="step-progress__line" aria-hidden="true" />
-              <span>{step.label}</span>
+              <span className="step-progress__label">
+                {index < stepIndex && <span aria-hidden="true">✓ </span>}
+                {step.label}
+              </span>
             </div>
           ))}
         </nav>
@@ -63,18 +86,9 @@ export function CheckoutFlow() {
               isLoading={flow.offersQuery.isPending}
               isError={flow.offersQuery.isError}
               onSelect={flow.selectOffer}
+              onContinue={flow.continueToPayment}
               onRetry={() => void flow.offersQuery.refetch()}
             />
-            <div className="flow-actions flow-actions--end">
-              <button
-                className="button button--primary"
-                type="button"
-                onClick={flow.continueToPayment}
-                disabled={!flow.offersQuery.isSuccess || !flow.selectedOffer}
-              >
-                Continuar para pagamento
-              </button>
-            </div>
           </section>
         )}
 
@@ -85,7 +99,37 @@ export function CheckoutFlow() {
               <p>Escolha uma forma de pagamento para o seu acordo.</p>
             </div>
             <div className="payment-layout">
-              <div>
+              <aside className="selection-summary payment-layout__offer" aria-label="Oferta selecionada">
+                <div className="selection-summary__offer">
+                  <span className="creditor-mark" aria-hidden="true">
+                    {flow.selectedOffer.creditorName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("")}
+                  </span>
+                  <div>
+                    <strong>{flow.selectedOffer.creditorName}</strong>
+                    <span>{flow.selectedOffer.description}</span>
+                    <span className="selection-summary__amount">
+                      {formatMoney(flow.selectedOffer.negotiatedAmountMinor, flow.selectedOffer.currency)}
+                      {flow.selectedOffer.paymentCondition.kind === "single" ? " à vista" : ""}
+                    </span>
+                  </div>
+                  {flow.selectedOffer.discountPercent !== undefined && (
+                    <span className="discount-pill">-{flow.selectedOffer.discountPercent}%</span>
+                  )}
+                </div>
+                {flow.selectedOffer.originalAmountMinor !== undefined && (
+                  <s className="selection-summary__original">
+                    {formatMoney(flow.selectedOffer.originalAmountMinor, flow.selectedOffer.currency)}
+                  </s>
+                )}
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => flow.setActiveStep("offers")}
+                >
+                  Trocar oferta <span aria-hidden="true">›</span>
+                </button>
+              </aside>
+              <div className="payment-methods payment-layout__methods">
                 <PaymentMethodList
                   methods={flow.paymentMethodsQuery.data}
                   selectedMethodId={flow.selectedMethodId}
@@ -95,37 +139,29 @@ export function CheckoutFlow() {
                   onRetry={() => void flow.paymentMethodsQuery.refetch()}
                 />
               </div>
-              <aside className="selection-summary" aria-label="Oferta selecionada">
-                <div className="selection-summary__offer">
-                  <span className="creditor-mark" aria-hidden="true">
-                    {flow.selectedOffer.creditorName.split(/\s+/).slice(0, 2).map((part) => part[0]).join("")}
-                  </span>
-                  <div>
-                    <strong>{flow.selectedOffer.creditorName}</strong>
-                    <span>{flow.selectedOffer.description}</span>
-                  </div>
+              <div className="payment-action-card payment-layout__actions">
+                <div className="agreement-amount">
+                  <span>Valor do acordo</span>
+                  <strong>
+                    {formatMoney(flow.selectedOffer.negotiatedAmountMinor, flow.selectedOffer.currency)}
+                  </strong>
                 </div>
                 <button
-                  className="text-button"
+                  className="button button--primary"
+                  type="button"
+                  onClick={flow.continueToReview}
+                  disabled={!flow.paymentMethodsQuery.isSuccess || !flow.selectedMethod}
+                >
+                  Ir para revisão <span aria-hidden="true">›</span>
+                </button>
+                <button
+                  className="button button--quiet"
                   type="button"
                   onClick={() => flow.setActiveStep("offers")}
                 >
-                  Trocar oferta
+                  Voltar
                 </button>
-              </aside>
-            </div>
-            <div className="flow-actions">
-              <button className="button button--quiet" type="button" onClick={() => flow.setActiveStep("offers")}>
-                Voltar
-              </button>
-              <button
-                className="button button--primary"
-                type="button"
-                onClick={flow.continueToReview}
-                disabled={!flow.paymentMethodsQuery.isSuccess || !flow.selectedMethod}
-              >
-                Ir para revisão
-              </button>
+              </div>
             </div>
           </section>
         )}
@@ -136,25 +172,48 @@ export function CheckoutFlow() {
               <h1 id="review-title">Revise seu acordo</h1>
               <p>Confira os dados antes de confirmar.</p>
             </div>
-            <ReviewSummary offer={flow.selectedOffer} method={flow.selectedMethod} />
-            <div className="flow-actions">
-              <button
-                className="button button--quiet"
-                type="button"
-                onClick={() => flow.setActiveStep("payment")}
-                disabled={checkout.isPending}
-              >
-                Voltar
-              </button>
-              {checkout.isError ? (
-                <CheckoutFeedback pending={checkout.isPending} onRetry={submitSelectedCheckout} />
-              ) : (
-                <CheckoutButton
-                  pending={checkout.isPending}
-                  disabled={!flow.selectedOfferId || !flow.selectedMethodId}
-                  onConfirm={submitSelectedCheckout}
-                />
-              )}
+            <div className="review-layout">
+              <ReviewSummary
+                offer={flow.selectedOffer}
+                method={flow.selectedMethod}
+                acceptedTerms={acceptedTerms}
+                onAcceptTerms={setAcceptedTerms}
+              />
+              <div className="review-action-card">
+                <div className="agreement-amount">
+                  <span>Valor do acordo</span>
+                  <strong>
+                    {formatMoney(flow.selectedOffer.negotiatedAmountMinor, flow.selectedOffer.currency)}
+                  </strong>
+                </div>
+                {checkout.isError ? (
+                  <CheckoutFeedback
+                    pending={checkout.isPending}
+                    disabled={!acceptedTerms}
+                    onRetry={submitSelectedCheckout}
+                  />
+                ) : (
+                  <CheckoutButton
+                    pending={checkout.isPending}
+                    disabled={!acceptedTerms || !flow.selectedOfferId || !flow.selectedMethodId}
+                    onConfirm={submitSelectedCheckout}
+                  />
+                )}
+                <button
+                  className="button button--quiet"
+                  type="button"
+                  onClick={() => flow.setActiveStep("payment")}
+                  disabled={checkout.isPending}
+                >
+                  Voltar
+                </button>
+                <p className="review-action-card__note">
+                  <span aria-hidden="true">ⓘ</span>
+                  Após confirmar, {flow.selectedMethod.id === "pix"
+                    ? "geramos o QR Code e o código Pix copia e cola."
+                    : "geramos o boleto para pagamento."}
+                </p>
+              </div>
             </div>
           </section>
         )}

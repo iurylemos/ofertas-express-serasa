@@ -1,10 +1,16 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { type JSX, useEffect, useState, type ReactNode } from "react";
 
 type WorkerState = "starting" | "ready" | "error";
 
-export function MockWorkerProvider({ children }: Readonly<{ children: ReactNode }>) {
+type MockWorkerProviderProps = Readonly<{
+  children: ReactNode;
+}>;
+
+export function MockWorkerProvider({
+  children,
+}: MockWorkerProviderProps): JSX.Element {
   const [state, setState] = useState<WorkerState>(
     process.env.NODE_ENV === "development" ? "starting" : "ready",
   );
@@ -33,7 +39,10 @@ export function MockWorkerProvider({ children }: Readonly<{ children: ReactNode 
     return (
       <main className="worker-gate" role="alert">
         <p>Não foi possível iniciar o ambiente de ofertas.</p>
-        <button className="button button--primary" onClick={() => setAttempt((value) => value + 1)}>
+        <button
+          className="button button--primary"
+          onClick={() => setAttempt((value) => value + 1)}
+        >
           Tentar novamente
         </button>
       </main>
@@ -48,5 +57,5 @@ export function MockWorkerProvider({ children }: Readonly<{ children: ReactNode 
     );
   }
 
-  return children;
+  return <>{children}</>;
 }

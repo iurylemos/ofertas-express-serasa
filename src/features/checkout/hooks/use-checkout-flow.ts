@@ -38,8 +38,12 @@ export function useCheckoutFlow() {
   const selectedOffer = offersQuery.data?.find((offer) => offer.id === selectedOfferId);
   const selectedMethod = paymentMethodsQuery.data?.find((method) => method.id === selectedMethodId);
 
-  function continueToPayment() {
-    if (offersQuery.isSuccess && selectedOffer) setActiveStep("payment");
+  function continueToPayment(offerId = selectedOfferId) {
+    const offer = offersQuery.data?.find((item) => item.id === offerId);
+    if (offersQuery.isSuccess && offer) {
+      setSelectedOfferId(offer.id);
+      setActiveStep("payment");
+    }
   }
 
   function continueToReview() {
