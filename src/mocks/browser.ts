@@ -5,12 +5,14 @@ export const worker = setupWorker(...handlers);
 
 let workerStartPromise: ReturnType<typeof worker.start> | null = null;
 
-export function startMockWorker() {
+export function startMockWorker(): ReturnType<typeof worker.start> {
   if (!workerStartPromise) {
-    workerStartPromise = worker.start({ onUnhandledRequest: "bypass" }).catch((error: unknown) => {
-      workerStartPromise = null;
-      throw error;
-    });
+    workerStartPromise = worker
+      .start({ onUnhandledRequest: "bypass" })
+      .catch((error: unknown) => {
+        workerStartPromise = null;
+        throw error;
+      });
   }
 
   return workerStartPromise;

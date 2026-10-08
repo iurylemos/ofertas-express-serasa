@@ -1,12 +1,17 @@
+import type { JSX } from "react";
 import { StatusMessage } from "@/components/molecules/StatusMessage";
 
-interface CheckoutFeedbackProps {
+type CheckoutFeedbackProps = {
   pending: boolean;
   disabled?: boolean;
   onRetry: () => void;
-}
+};
 
-export function CheckoutFeedback({ pending, disabled = false, onRetry }: CheckoutFeedbackProps) {
+export function CheckoutFeedback({
+  pending,
+  disabled = false,
+  onRetry,
+}: Readonly<CheckoutFeedbackProps>): JSX.Element {
   return (
     <StatusMessage variant="error" className="checkout-feedback">
       <p>Não foi possível concluir seu acordo. Tente novamente.</p>

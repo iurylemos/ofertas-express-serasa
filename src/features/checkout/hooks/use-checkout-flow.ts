@@ -1,12 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useOffers } from "@/features/offers/hooks/use-offers";
 import { usePaymentMethods } from "@/features/payment/hooks/use-payment-methods";
+import { Offer } from "@/interfaces/offer";
+import { UseQueryResult } from "@tanstack/react-query";
+import { PaymentMethod } from "@/interfaces/payment-method";
 
 export type CheckoutStep = "offers" | "payment" | "review";
 
-export function useCheckoutFlow() {
+type CheckoutFlowData = {
+  activeStep: CheckoutStep;
+  setActiveStep: Dispatch<SetStateAction<CheckoutStep>>;
+  offersQuery: UseQueryResult<Offer[], Error>;
+  paymentMethodsQuery: UseQueryResult<PaymentMethod[], Error>;
+  selectedOfferId: string | null;
+  selectedMethodId: string | null;
+  selectedOffer: Offer | undefined;
+  selectedMethod: PaymentMethod | undefined;
+  selectOffer: Dispatch<SetStateAction<string | null>>;
+  selectMethod: Dispatch<SetStateAction<string | null>>;
+  continueToPayment: (offerId?: string | null) => void;
+  continueToReview: () => void;
+};
+
+export function useCheckoutFlow(): CheckoutFlowData {
   const [activeStep, setActiveStep] = useState<CheckoutStep>("offers");
   const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
   const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
@@ -33,24 +51,32 @@ export function useCheckoutFlow() {
     ) {
       setSelectedMethodId(null);
     }
-  }, [paymentMethodsQuery.data, paymentMethodsQuery.isSuccess, selectedMethodId]);
+  }, [
+    paymentMethodsQuery.data,
+    paymentMethodsQuery.isSuccess,
+    selectedMethodId,
+  ]);
 
-  const selectedOffer = offersQuery.data?.find((offer) => offer.id === selectedOfferId);
-  const selectedMethod = paymentMethodsQuery.data?.find((method) => method.id === selectedMethodId);
+  const selectedOffer = offersQuery.data?.find(
+    (offer) => offer.id === selectedOfferId,
+  );
+  const selectedMethod = paymentMethodsQuery.data?.find(
+    (method) => method.id === selectedMethodId,
+  );
 
-  function continueToPayment(offerId = selectedOfferId) {
+  const continueToPayment = (offerId = selectedOfferId): void => {
     const offer = offersQuery.data?.find((item) => item.id === offerId);
     if (offersQuery.isSuccess && offer) {
       setSelectedOfferId(offer.id);
       setActiveStep("payment");
     }
-  }
+  };
 
-  function continueToReview() {
+  const continueToReview = (): void => {
     if (paymentMethodsQuery.isSuccess && selectedOffer && selectedMethod) {
       setActiveStep("review");
     }
-  }
+  };
 
   return {
     activeStep,
