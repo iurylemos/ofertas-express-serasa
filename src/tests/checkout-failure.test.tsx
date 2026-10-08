@@ -28,11 +28,14 @@ describe("checkout failure recovery", () => {
     const user = userEvent.setup();
     renderWithProviders(<CheckoutFlow />);
     await user.click(await screen.findByRole("radio", { name: /Banco Horizonte/ }));
-    await user.click(screen.getByRole("button", { name: /Continuar para pagamento/ }));
+    await user.click(screen.getByRole("button", {
+      name: "Continuar para pagamento com Banco Horizonte",
+    }));
     await user.click(await screen.findByRole("radio", { name: /Pix/ }));
     await user.click(screen.getByRole("button", { name: /Ir para revisão/ }));
 
     const confirm = screen.getByRole("button", { name: /Confirmar acordo/ });
+    await user.click(screen.getByRole("checkbox", { name: "Li e aceito os termos do acordo" }));
     await user.click(confirm);
     expect(confirm).toBeDisabled();
     await user.click(confirm);

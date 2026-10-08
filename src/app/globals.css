@@ -12,7 +12,7 @@
   --danger: #a82f3a;
   --danger-bg: #fff0f0;
   --content-width: 1000px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, Arial, Helvetica, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -61,13 +61,19 @@ input:focus-visible {
 }
 
 .topbar {
-  display: flex;
   min-height: 68px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 max(24px, calc((100vw - var(--content-width)) / 2));
+  padding: 0 24px;
   border-bottom: 1px solid var(--line);
   background: var(--surface);
+}
+
+.topbar__inner {
+  display: flex;
+  width: min(100%, var(--content-width));
+  min-height: inherit;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
 }
 
 .brand {
@@ -76,6 +82,14 @@ input:focus-visible {
   font-weight: 750;
   letter-spacing: -0.03em;
   text-decoration: none;
+}
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+  font-weight: 650;
 }
 
 .brand-mark {
@@ -123,8 +137,18 @@ input:focus-visible {
   font-weight: 700;
 }
 
-.step-progress__step--active .step-progress__line {
+.step-progress__step--active .step-progress__line,
+.step-progress__step--complete .step-progress__line {
   background: var(--blue);
+}
+
+.step-progress__step--complete .step-progress__label {
+  color: var(--muted);
+}
+
+.step-progress__step--complete .step-progress__label span {
+  color: var(--green);
+  font-weight: 700;
 }
 
 .flow-section {
@@ -139,7 +163,7 @@ input:focus-visible {
 .section-heading h1,
 .success-panel h1 {
   margin: 0 0 4px;
-  font-size: clamp(1.45rem, 3vw, 1.9rem);
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: -0.035em;
 }
@@ -177,6 +201,26 @@ input:focus-visible {
   box-shadow: 0 2px 4px rgb(16 26 54 / 9%);
   cursor: pointer;
   transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.offer-card__selection {
+  display: flex;
+  flex: 1;
+  cursor: pointer;
+}
+
+.offer-card__continue {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 16px;
+}
+
+.offer-card__continue span,
+.payment-action-card .button--primary span,
+.text-button span {
+  padding-left: 5px;
+  font-size: 1.2em;
+  line-height: 0;
 }
 
 .offer-card:hover {
@@ -456,13 +500,98 @@ input:focus-visible {
   gap: 16px;
 }
 
+.payment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.8fr);
+  grid-template-areas:
+    "methods offer"
+    "methods actions";
+  align-items: start;
+  gap: 12px 20px;
+}
+
+.payment-layout__offer {
+  grid-area: offer;
+}
+
+.payment-layout__methods {
+  grid-area: methods;
+}
+
+.payment-layout__actions {
+  grid-area: actions;
+}
+
+.selection-summary__offer {
+  align-items: flex-start;
+}
+
+.selection-summary__offer > div {
+  flex: 1;
+}
+
+.selection-summary__amount {
+  color: var(--ink) !important;
+  font-size: 0.8rem !important;
+  font-weight: 650;
+}
+
+.selection-summary__original {
+  margin-top: -10px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
 .selection-summary .text-button {
   border-top: 1px solid var(--line);
   padding-top: 13px;
 }
 
+.payment-action-card,
+.review-action-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 2px 4px rgb(16 26 54 / 8%);
+}
+
+.payment-action-card .button,
+.review-action-card .button {
+  width: 100%;
+}
+
+.agreement-amount {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.88rem;
+}
+
+.agreement-amount > span {
+  color: var(--muted);
+}
+
+.agreement-amount strong {
+  white-space: nowrap;
+}
+
 .review-section {
-  max-width: 620px;
+  max-width: 850px;
+}
+
+.review-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.9fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.review-details {
+  display: grid;
+  gap: 16px;
 }
 
 .review-card h2 {
@@ -513,6 +642,74 @@ input:focus-visible {
 
 .review-row--total strong {
   font-size: 1.2rem;
+}
+
+.terms-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.terms-card h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.terms-card ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.84rem;
+}
+
+.terms-card li::marker {
+  color: var(--muted);
+}
+
+.terms-card__details {
+  margin-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--blue-dark);
+  font-size: 0.84rem;
+}
+
+.terms-card__details summary {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.terms-card__details p {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.terms-card__accept {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.terms-card__accept input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+.review-action-card__note {
+  display: flex;
+  gap: 7px;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .state-message {
@@ -601,9 +798,27 @@ input:focus-visible {
 }
 
 @media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+
   .topbar {
     min-height: 58px;
     padding: 0 18px;
+  }
+
+  .topbar__inner {
+    justify-content: space-between;
+  }
+
+  .topbar__user {
+    gap: 8px;
+    font-size: 0.75rem;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
   }
 
   .checkout-main {
@@ -620,13 +835,35 @@ input:focus-visible {
     font-size: 0.75rem;
   }
 
-  .offer-grid,
-  .payment-layout {
+  .section-heading h1 {
+    font-size: 1.125rem;
+  }
+
+  .offer-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .offer-card {
     min-height: 205px;
+    padding: 16px;
+  }
+
+  .payment-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "offer"
+      "methods"
+      "actions";
+    gap: 12px;
+  }
+
+  .review-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .payment-action-card,
+  .review-action-card {
     padding: 16px;
   }
 
@@ -646,6 +883,10 @@ input:focus-visible {
     padding-left: 10px;
     font-size: 0.9rem;
   }
+
+  .button {
+    min-height: 42px;
+  }
 }
 
 @media (min-width: 641px) and (max-width: 900px) {
@@ -658,6 +899,11 @@ input:focus-visible {
   }
 
   .payment-layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+    gap: 14px;
+  }
+
+  .review-layout {
     grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
     gap: 14px;
   }
@@ -704,12 +950,8 @@ input:focus-visible {
   }
 
   .review-row--total {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .review-row--total strong {
-    text-align: left;
+    flex-direction: row;
+    align-items: center;
   }
 
   .flow-actions:not(.flow-actions--end) {

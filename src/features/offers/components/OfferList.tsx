@@ -8,6 +8,7 @@ interface OfferListProps {
   isLoading: boolean;
   isError: boolean;
   onSelect: (offerId: string) => void;
+  onContinue: (offerId: string) => void;
   onRetry: () => void;
 }
 
@@ -17,6 +18,7 @@ export function OfferList({
   isLoading,
   isError,
   onSelect,
+  onContinue,
   onRetry,
 }: OfferListProps) {
   if (isLoading) {
@@ -44,6 +46,7 @@ export function OfferList({
             offer={offer}
             selected={selectedOfferId === offer.id}
             onSelect={onSelect}
+            onContinue={onContinue}
           />
         ))}
       </div>

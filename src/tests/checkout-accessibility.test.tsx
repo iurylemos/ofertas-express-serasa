@@ -20,10 +20,13 @@ describe("checkout accessibility", () => {
     expect(offer).toBeChecked();
 
     await user.tab();
-    expect(screen.getByRole("button", { name: /Continuar para pagamento/ })).toHaveFocus();
+    expect(screen.getByRole("button", {
+      name: "Continuar para pagamento com Banco Horizonte",
+    })).toHaveFocus();
     await user.keyboard("{Enter}");
 
     const pix = await screen.findByRole("radio", { name: "Pix" });
+    await user.tab();
     await user.tab();
     await user.tab();
     expect(pix).toHaveFocus();
@@ -41,6 +44,6 @@ describe("checkout accessibility", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Não foi possível carregar as ofertas agora.",
     );
-    expect(screen.getByRole("button", { name: /Continuar para pagamento/ })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: /Continuar para pagamento/ })).not.toBeInTheDocument();
   });
 });
